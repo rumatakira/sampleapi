@@ -1,0 +1,438 @@
+openapi: 3.0.0
+info:
+  description: This is a sample API
+  version: "1.0.0"
+  title: Sample API
+  contact:
+    email: rumatakira74@gmail.com.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+externalDocs:
+  description: Find more info here
+  url: https://docs.google.com/document/d/12pf7fx3tTC9Vlk4-h0vWRxQHAEgWJBzsUa_IH6LcC4Y/edit
+paths:
+  /cities:
+    get:
+      tags:
+        - cities
+      summary: Get cities list
+      operationId: getCities
+      description: |
+        'Get cities list from the system'
+      responses:
+        default:
+          description: successful operation
+  /divisionsAndCities:
+    get:
+      security:
+         - bearerAuth: []
+      tags:
+        - divisions
+      summary: Get cities and divisions in them
+      description: 
+        'This can only be done by the logged in user.'
+      operationId: getDivisionsAndCities
+      responses:
+        default:
+          description: successful operation
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /cityDivisions:
+    get:
+      tags:
+        - divisions
+      summary: Get divisions in the specified city
+      operationId: getCityDivisions
+      parameters:
+        - in: query
+          name: cityName
+          required: true
+          example: "Tampa"
+          schema:
+            type: string
+      responses:
+        default:
+          description: successful operation
+        '400':
+          description: 'Bad request'
+        '404':
+          description: 'Divisions in the specified city not found'
+  /division:
+    get:
+      tags:
+        - divisions
+      summary: Get division
+      operationId: getDivision
+      parameters:
+        - name: divisionName
+          in: query
+          description: Division name
+          required: true
+          example: 'Alba Highway'
+          schema:
+            type: string
+        - name: divisionCity
+          in: query
+          description: Division city
+          required: true
+          example: 'Jaclynville'
+          schema:
+            type: string
+      responses:
+        default:
+          description: successful operation
+        '400':
+          description: 'Bad request'
+        '404':
+          description: 'Division not found'
+    post:
+      security:
+         - bearerAuth: []
+      tags:
+        - divisions
+      summary: Create division
+      description: 
+        'This can only be done by the logged in user.'
+      operationId: createDivision
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDivision'
+        description: 
+          'Created division object'
+        required: true
+      responses:
+        default:
+          description: successful operation
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    put:
+      security:
+         - bearerAuth: []
+      tags:
+        - divisions
+      summary: Update division
+      description: 
+        'This can only be done by the logged in user.'
+      operationId: updateDivision
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDivision'
+        description: 
+          'Modify divisions object'
+        required: true
+      responses:
+        default:
+          description: successful operation
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      security:
+         - bearerAuth: []
+      tags:
+        - divisions
+      summary: Delete division
+      description: 
+        'This can only be done by the logged in user.'
+      operationId: deleteDivision
+      parameters:
+        - name: divisionName
+          in: query
+          description: Division name
+          required: true
+          example: 'Alba Highway'
+          schema:
+            type: string
+        - name: divisionCity
+          in: query
+          description: Division city
+          required: true
+          example: 'Jaclynville'
+          schema:
+            type: string
+      responses:
+        default:
+          description: successful operation
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: 'Division not found'      
+  /company:
+    get:
+      tags:
+        - company
+      summary: Get company info from specified division
+      operationId: getCompanyInfo
+      parameters:
+        - in: query
+          name: divisionName
+          example: 'Alba Highway'
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: successful operation
+        '400':
+          description: 'Bad request'
+        '404':
+          description: 'Company not found'
+  /usersByCompany:
+    get:
+      security:
+         - bearerAuth: []
+      tags:
+        - user
+      summary: Get users which belongs to the same company
+      operationId: getUsers
+      description: 
+        'This can only be done by the logged in user.'
+      parameters:
+        - in: query
+          name: userLoginName
+          required: true
+          example: 'rod48'
+          schema:
+            type: string
+      responses:
+        default:
+          description: successful operation
+        '400':
+          description: 'BAD REQUEST'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: 'Users not found'
+  /user:
+    get:
+      security:
+         - bearerAuth: []
+      tags:
+        - user
+      summary: Get user
+      operationId: getUser
+      description: 
+        'This can only be done by the logged in user.'
+      parameters:
+        - in: query
+          name: userId
+          required: true
+          example: 2
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+        '400':
+          description: 'BAD REQUEST'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: 'Users not found'
+    post:
+      security:
+         - bearerAuth: []
+      tags:
+        - user
+      summary: Create user
+      description: 
+        'This can only be done by the logged in user.'
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+        description: 
+          'Created user object'
+        required: true
+      responses:
+        default:
+          description: successful operation
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    put:
+      security:
+         - bearerAuth: []
+      tags:
+        - user
+      summary: Update user
+      description: 
+        'This can only be done by the logged in user.'
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+        description: 
+          'Modify user object'
+        required: true
+      responses:
+        default:
+          description: successful operation
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      security:
+         - bearerAuth: []
+      tags:
+        - user
+      summary: Delete user
+      description: 
+        'This can only be done by the logged in user.'
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: query
+          description: User with login name that need to be updated
+          required: true
+          example: 2
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: User not found
+components:
+  schemas:
+    CreateDivision:
+      type: object
+      required:
+        - divisionName
+        - divisionCity
+        - divisionTimeZonne
+        - divisionAddress
+        - divisionCoordinates
+        - divisionType
+        - divisionCompanyName
+      properties:
+        divisionName:
+          type: string
+          example: "Rich Ranch"
+        divisionCity:
+          type: string
+          example: "Tampa"
+        divisionTimeZone:
+          type: string
+          example: "UTC"
+        divisionAddress:
+          type: string
+          example: "777 Beach Crossroad"
+        divisionCoordinates:
+          type: string
+          example: "Latitude 44.666944 Longitude 107.777058"
+        divisionType:
+          type: string
+          example: "cafe"
+          description: enum ('cafe', 'office')
+          enum:
+          - "cafe"
+          - "office"
+        divisionCompanyName:
+          type: string
+          example: "Schimmel-Balistreri"
+    UpdateDivision:
+      type: object
+      required:
+        - divisionId
+        - divisionName
+        - divisionAddress
+        - divisionCoordinates
+        - divisionType
+        - divisionCompanyName
+      properties:
+        divisionId:
+          type: integer
+          example: 2
+        divisionName:
+          type: string
+          example: "Rich Ranch"
+        divisionAddress:
+          type: string
+          example: "777 Beach Crossroad"
+        divisionCoordinates:
+          type: string
+          example: "Latitude 44.666944 Longitude 107.777058"
+        divisionType:
+          type: string
+          example: "cafe"
+          description: enum ('cafe', 'office')
+          enum:
+          - "cafe"
+          - "office"
+        divisionCompanyName:
+          type: string
+          example: "Schimmel-Balistreri"
+    CreateUser:
+        type: object
+        required:
+          - userRealName
+          - userLoginName
+          - userPassword
+          - userPhone
+          - companyUserBelogsTo
+        properties:
+          userRealName:
+            type: string
+            example: "Adam A.Williams"
+          userLoginName:
+            type: string
+            example: "rod48"
+          userPassword:
+            type: string
+            example: "123456789"
+          userPhone:
+            type: string
+            example: "201-886-0269 x3767"
+          companyUserBelogsTo:
+            type: string
+            example: "Schimmel-Balistreri"
+    UpdateUser:
+        type: object
+        required:
+          - userId
+          - userRealName
+          - userLoginName
+          - userPassword
+          - userPhone
+          - companyUserBelogsTo
+        properties:
+          userId:
+            type: integer
+            example: 2
+          userRealName:
+            type: string
+            example: "Adam A.Williams"
+          userLoginName:
+            type: string
+            example: "rod48"
+          userPassword:
+            type: string
+            example: "123456789"
+          userPhone:
+            type: string
+            example: "201-886-0269 x3767"
+          companyUserBelogsTo:
+            type: string
+            example: "Schimmel-Balistreri"        
+  securitySchemes:
+    bearerAuth:         
+      type: http
+      scheme: bearer
+      bearerFormat: sha1
+  responses:
+    UnauthorizedError:
+      description: 
+        'Authentication information is missing or invalid'
+      headers:
+        WWW_Authenticate:
+          schema:
+            type: string

@@ -1,0 +1,25 @@
+http:
+  address: "0.0.0.0:8888"
+  workers:
+    command: "php index.php"
+    pool:
+      # number of workers to be serving.
+      numWorkers: 2
+
+      # maximum jobs per worker, 0 - unlimited.
+      maxJobs:  0
+
+      # for how long worker is allowed to be bootstrapped.
+      allocateTimeout: 60
+
+      # amount of time given to the worker to gracefully destruct itself.
+      destroyTimeout:  60
+    
+health:
+  address: localhost:2114
+     
+# Additional HTTP headers and CORS control.
+headers:
+  # Automatically add headers to every response.
+  response:
+    "X-Powered-By": "RoadRunner"
